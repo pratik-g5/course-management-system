@@ -34,8 +34,17 @@ const validateCourseUpdate = (req) => {
   return isEditAllowed;
 };
 
+const validatePackageData = (req) => {
+  const { title, courses } = req.body;
+
+  if (!title || !courses) {
+    throw new Error('All fields are required');
+  }
+};
+
 module.exports = {
   validateSignupData,
   validateCourseData,
   validateCourseUpdate,
+  validatePackageData,
 };
