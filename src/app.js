@@ -9,8 +9,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 const authRouter = require('./routes/authRouter');
+const courseRouter = require('./routes/courseRouter');
 
 app.use('/', authRouter);
+app.use('/', courseRouter);
 
 connectDB()
   .then(() => {

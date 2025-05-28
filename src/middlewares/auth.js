@@ -7,7 +7,7 @@ const userAuth = async (req, res, next) => {
     if (!token) {
       return res.status(401).send('Authentication failed!');
     }
-    const decodedObj = jwt.verify(token, 'DEV@Tinder3105');
+    const decodedObj = jwt.verify(token, 'COURSE@DEV001');
 
     const { _id } = decodedObj;
 

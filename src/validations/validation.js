@@ -1,4 +1,6 @@
 const validator = require('validator');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const validateSignupData = (req) => {
   const { name, email, password } = req.body;
@@ -12,4 +14,15 @@ const validateSignupData = (req) => {
   }
 };
 
-module.exports = { validateSignupData };
+const validateCourseData = (req) => {
+  const { title, description, price, image } = req.body;
+
+  if (!title || !description || !price) {
+    throw new Error('All fields are required');
+  }
+  if (price < 0) {
+    throw new Error('Price must be a positive integer');
+  }
+};
+
+module.exports = { validateSignupData, validateCourseData };
