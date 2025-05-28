@@ -36,7 +36,7 @@ courseRouter.get('/course/view/all', userAuth, async (req, res) => {
       creatorId,
     }).select('title description price image creatorId');
     if (courses.length === 0) {
-      res.send('No courses found!');
+      return res.send('No courses found!');
     }
 
     res.send({
@@ -61,7 +61,7 @@ courseRouter.get('/course/view/:courseId', userAuth, async (req, res) => {
     }).select('title description price image creatorId');
 
     if (course.length === 0) {
-      res.send('No course found!');
+      return res.send('No course found!');
     }
 
     res.send({
