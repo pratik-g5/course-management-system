@@ -25,4 +25,17 @@ const validateCourseData = (req) => {
   }
 };
 
-module.exports = { validateSignupData, validateCourseData };
+const validateCourseUpdate = (req) => {
+  const ALLOWED_UPDATE_FIELDS = ['title', 'description', 'image', 'price'];
+
+  const isEditAllowed = Object.keys(req.body).every((key) =>
+    ALLOWED_UPDATE_FIELDS.includes(key)
+  );
+  return isEditAllowed;
+};
+
+module.exports = {
+  validateSignupData,
+  validateCourseData,
+  validateCourseUpdate,
+};
