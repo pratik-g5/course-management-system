@@ -3,7 +3,7 @@ const connectDB = require('./config/database');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const app = express();
-const port = process.env.PORT || 7000;
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
