@@ -8,6 +8,7 @@ const {
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const Course = require('../models/courseModel');
+const { getPriceByLocation, isBlacklistedLocation } = require('../utils/utils');
 
 courseRouter.post('/course/create', userAuth, async (req, res) => {
   try {
@@ -34,17 +35,32 @@ courseRouter.post('/course/create', userAuth, async (req, res) => {
 courseRouter.get('/course/view/all', userAuth, async (req, res) => {
   try {
     const creatorId = req.user._id;
+    const location = req.query.location || 'default';
 
-    const courses = await Course.find({
-      creatorId,
-    }).select('title description price image creatorId');
+    if (isBlacklistedLocation(location)) {
+      return res.status(403).send('Access from this location is blocked.');
+    }
+
+    const courses = await Course.find({ creatorId }).select(
+      'title description price image creatorId'
+    );
+
     if (courses.length === 0) {
       return res.send('No courses found!');
     }
 
+    const updatedCourses = courses.map((course) => {
+      const { currency, price } = getPriceByLocation(course.price, location);
+      return {
+        ...course.toObject(),
+        price,
+        currency,
+      };
+    });
+
     res.send({
       message: 'Courses found!',
-      data: courses,
+      data: updatedCourses,
     });
   } catch (err) {
     res.status(500).send('ERROR : ' + err.message);
@@ -54,22 +70,35 @@ courseRouter.get('/course/view/all', userAuth, async (req, res) => {
 courseRouter.get('/course/view/:courseId', userAuth, async (req, res) => {
   try {
     const courseId = req.params.courseId;
+    const creatorId = req.user._id;
+    const location = req.query.location || 'default';
 
     if (!ObjectId.isValid(courseId)) {
       throw new Error('Invalid course Id!');
     }
-    const course = await Course.find({
+
+    if (isBlacklistedLocation(location)) {
+      return res.status(403).send('Access from this location is blocked.');
+    }
+
+    const course = await Course.findOne({
       _id: courseId,
-      creatorId: req.user._id,
+      creatorId,
     }).select('title description price image creatorId');
 
-    if (course.length === 0) {
+    if (!course) {
       return res.send('No course found!');
     }
 
+    const { currency, price } = getPriceByLocation(course.price, location);
+
     res.send({
       message: 'Course found!',
-      data: course,
+      data: {
+        ...course.toObject(),
+        price,
+        currency,
+      },
     });
   } catch (err) {
     res.status(500).send('ERROR : ' + err.message);
