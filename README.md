@@ -5,6 +5,11 @@ This project is a backend API built with **Node.js**, **Express.js**, and **Mong
 The system follows the MVC (Model-View-Controller) architectural pattern and uses Mongoose for database modeling. Data validation is handled at the schema level. All core features are implemented in a modular, scalable manner, ready for production-level enhancement.
 
 ---
+## Postman Collection 
+
+https://www.postman.com/bold-space-685722/workspace/course-management-public
+
+---
 
 ## ✅ Features
 
